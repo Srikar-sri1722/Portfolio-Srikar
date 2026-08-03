@@ -147,7 +147,17 @@ function initNavbarScroll() {
     const navLinks = document.getElementById('nav-links');
     if (mobileToggle && navLinks) {
         mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
+            const isOpen = navLinks.classList.toggle('active');
+            mobileToggle.innerHTML = `<i data-lucide="${isOpen ? 'x' : 'menu'}"></i>`;
+            if (window.lucide) lucide.createIcons();
+        });
+
+        navLinks.querySelectorAll('.nav-link').forEach((link) => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.innerHTML = '<i data-lucide="menu"></i>';
+                if (window.lucide) lucide.createIcons();
+            });
         });
     }
 }
