@@ -522,7 +522,7 @@ async function initLiveCodingEngine(config) {
     const diffCtx = document.getElementById('leetcode-diff-chart');
     const langCtx = document.getElementById('languages-chart');
 
-    // Exact Verified Live Screenshot Data
+    // Last-known fallback values, used only if the live fetch fails
     let lcData = {
         totalSolved: 304,
         easySolved: 189,
@@ -539,7 +539,27 @@ async function initLiveCodingEngine(config) {
         repos: 12
     };
 
-    // Render Initial Charts
+    const lcStatusPill = document.getElementById('lc-status-pill');
+    let lcIsLive = false;
+    let gfgIsLive = false;
+
+    // Fetch LeetCode + GFG in parallel BEFORE touching the DOM, so we only
+    // ever render the final numbers once - no flash of old data first.
+    const [fetchedLcData, fetchedGfgData] = await Promise.all([
+        fetchLiveLeetCodeData(),
+        fetchLiveGfgData()
+    ]);
+
+    if (fetchedLcData) {
+        lcData = fetchedLcData;
+        lcIsLive = true;
+    }
+    if (fetchedGfgData) {
+        gfgData.totalSolved = fetchedGfgData.totalSolved;
+        gfgIsLive = true;
+    }
+
+    // Render Charts (using final data - live if fetched, fallback otherwise)
     const chartLibReady = typeof Chart !== 'undefined';
     if (!chartLibReady) {
         console.warn('[Portfolio] Chart.js did not load - skipping coding-stats charts.');
@@ -549,7 +569,11 @@ async function initLiveCodingEngine(config) {
         diffChart = new Chart(diffCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Easy (189)', 'Medium (107)', 'Hard (8)'],
+                labels: [
+                    `Easy (${lcData.easySolved})`,
+                    `Medium (${lcData.mediumSolved})`,
+                    `Hard (${lcData.hardSolved})`
+                ],
                 datasets: [{
                     data: [lcData.easySolved, lcData.mediumSolved, lcData.hardSolved],
                     backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
@@ -590,7 +614,7 @@ async function initLiveCodingEngine(config) {
         });
     }
 
-    // Trigger Initial Counter Animation Instantly
+    // Animate every counter exactly once, straight to the final value
     animateCounter(document.getElementById('hero-lc-solved'), lcData.totalSolved);
     animateCounter(document.getElementById('hero-gfg-solved'), gfgData.totalSolved);
     animateCounter(document.getElementById('lc-total-val'), lcData.totalSolved);
@@ -599,54 +623,30 @@ async function initLiveCodingEngine(config) {
     animateCounter(document.getElementById('lc-med-val'), lcData.mediumSolved);
     animateCounter(document.getElementById('lc-hard-val'), lcData.hardSolved);
 
-    // Live API Fetching for LeetCode (@Srikar1704)
-    const lcStatusPill = document.getElementById('lc-status-pill');
-    const fetchedData = await fetchLiveLeetCodeData();
+    // Set every text label exactly once, with the same final data
+    const lcHeadingCount = document.getElementById('lc-heading-count');
+    if (lcHeadingCount) lcHeadingCount.textContent = lcData.totalSolved;
 
-    if (fetchedData) {
-        lcData = fetchedData;
-        animateCounter(document.getElementById('hero-lc-solved'), lcData.totalSolved);
-        animateCounter(document.getElementById('lc-total-val'), lcData.totalSolved);
-        animateCounter(document.getElementById('lc-easy-val'), lcData.easySolved);
-        animateCounter(document.getElementById('lc-med-val'), lcData.mediumSolved);
-        animateCounter(document.getElementById('lc-hard-val'), lcData.hardSolved);
+    const lcBannerCount = document.getElementById('lc-banner-count');
+    if (lcBannerCount) lcBannerCount.textContent = lcData.totalSolved;
 
-        if (diffChart) {
-            diffChart.data.labels = [
-                `Easy (${lcData.easySolved})`,
-                `Medium (${lcData.mediumSolved})`,
-                `Hard (${lcData.hardSolved})`
-            ];
-            diffChart.data.datasets[0].data = [lcData.easySolved, lcData.mediumSolved, lcData.hardSolved];
-            diffChart.update();
-        }
+    const lcCardSub = document.getElementById('lc-card-sub');
+    if (lcCardSub) lcCardSub.textContent = `Live: ${lcData.totalSolved} Solved`;
 
-        const lcHeadingCount = document.getElementById('lc-heading-count');
-        if (lcHeadingCount) lcHeadingCount.textContent = lcData.totalSolved;
-
-        const lcBannerCount = document.getElementById('lc-banner-count');
-        if (lcBannerCount) lcBannerCount.textContent = lcData.totalSolved;
-
-        const lcCardSub = document.getElementById('lc-card-sub');
-        if (lcCardSub) lcCardSub.textContent = `Live: ${lcData.totalSolved} Solved`;
-
-        if (lcStatusPill) lcStatusPill.textContent = `LIVE SYNCED • ${lcData.totalSolved} Solved`;
-    } else {
-        if (lcStatusPill) lcStatusPill.textContent = "LAST KNOWN • 304 Solved";
+    if (lcStatusPill) {
+        lcStatusPill.textContent = lcIsLive
+            ? `LIVE SYNCED • ${lcData.totalSolved} Solved`
+            : `LAST KNOWN • ${lcData.totalSolved} Solved`;
     }
 
-    // Live API Fetching for GeeksForGeeks (@kandulasrm8r3)
-    const fetchedGfgData = await fetchLiveGfgData();
-    if (fetchedGfgData) {
-        gfgData.totalSolved = fetchedGfgData.totalSolved;
-        animateCounter(document.getElementById('hero-gfg-solved'), gfgData.totalSolved);
-        animateCounter(document.getElementById('gfg-total-val'), gfgData.totalSolved);
+    const gfgBannerCount = document.getElementById('gfg-banner-count');
+    if (gfgBannerCount) gfgBannerCount.textContent = gfgData.totalSolved;
 
-        const gfgBannerCount = document.getElementById('gfg-banner-count');
-        if (gfgBannerCount) gfgBannerCount.textContent = gfgData.totalSolved;
-
-        const gfgCardSub = document.getElementById('gfg-card-sub');
-        if (gfgCardSub) gfgCardSub.textContent = `Live: ${gfgData.totalSolved} Solved | Score ${gfgData.score} | Rank 648`;
+    const gfgCardSub = document.getElementById('gfg-card-sub');
+    if (gfgCardSub) {
+        gfgCardSub.textContent = gfgIsLive
+            ? `Live: ${gfgData.totalSolved} Solved | Score ${gfgData.score} | Rank 648`
+            : `Last Known: ${gfgData.totalSolved} Solved | Score ${gfgData.score} | Rank 648`;
     }
 
     // Live API Fetching for GitHub (@Srikar-sri1722)
