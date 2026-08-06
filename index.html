@@ -304,7 +304,7 @@
         <div class="container">
             <div class="live-sync-banner">
                 <span class="live-badge-glow"><span class="pulse-emerald"></span> LIVE API TRACKED</span>
-                <span style="font-size: 0.88rem; color: var(--text-muted);">LeetCode (@Srikar1704: 304 Solved) & GeeksForGeeks (@kandulasrm8r3: 47 Solved, Score 121)</span>
+                <span style="font-size: 0.88rem; color: var(--text-muted);">LeetCode (@Srikar1704: <span id="lc-banner-count">304</span> Solved) & GeeksForGeeks (@kandulasrm8r3: <span id="gfg-banner-count">47</span> Solved, Score 121)</span>
             </div>
 
             <div class="section-tag" style="margin-top: 12px;"><i data-lucide="activity"></i> Real-Time Stats</div>
@@ -350,7 +350,7 @@
                 <div class="glass-card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                         <h3 style="font-size: 1.25rem; color: var(--accent);">
-                            <i data-lucide="pie-chart"></i> LeetCode Difficulty Breakdown (304 Solved)
+                            <i data-lucide="pie-chart"></i> LeetCode Difficulty Breakdown (<span id="lc-heading-count">304</span> Solved)
                         </h3>
                         <span class="live-status-pill" id="lc-status-pill">LIVE TRACKED • Rating 1,411</span>
                     </div>
@@ -394,7 +394,7 @@
                             GeeksForGeeks <span class="sync-dot"></span>
                         </div>
                         <div style="font-size: 0.85rem; color: var(--text-muted);">@kandulasrm8r3 (Srikar Kandula)</div>
-                        <div style="font-size: 0.8rem; color: var(--accent-emerald); margin-top: 4px;">Live: 47 Solved | Score 121 | Rank 648</div>
+                        <div style="font-size: 0.8rem; color: var(--accent-emerald); margin-top: 4px;" id="gfg-card-sub">Live: 47 Solved | Score 121 | Rank 648</div>
                     </div>
                 </a>
 
@@ -448,13 +448,13 @@
                     <h3 style="font-size: 1.4rem; color: var(--accent); margin-bottom: 20px;">Contact Details</h3>
 
                     <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px;">
-                        <div style="display: flex; align-items: center; gap: 16px;">
+                        <a href="mailto:kandulasrikar172@gmail.com" style="display: flex; align-items: center; gap: 16px; text-decoration: none;">
                             <div class="profile-icon"><i data-lucide="mail"></i></div>
                             <div>
                                 <div style="font-size: 0.85rem; color: var(--text-muted);">Email Address</div>
-                                <a href="mailto:kandulasrikar172@gmail.com" style="color: #F5F5F5; text-decoration: none; font-weight: 600;">kandulasrikar172@gmail.com</a>
+                                <span style="color: #F5F5F5; font-weight: 600;">kandulasrikar172@gmail.com</span>
                             </div>
-                        </div>
+                        </a>
 
                         <div style="display: flex; align-items: center; gap: 16px;">
                             <div class="profile-icon"><i data-lucide="phone"></i></div>
@@ -473,14 +473,14 @@
                         </div>
                     </div>
 
-                    <a href="https://drive.google.com/file/d/1EX13aN--hfOq3FnvZCDmGg7c23cjTGJq/view?usp=drive_link" target="_blank" class="btn btn-primary" style="width: 100%;">
+                    <a href="https://github.com/Srikar-sri1722" target="_blank" class="btn btn-primary" style="width: 100%;">
                         <i data-lucide="file-text"></i> Download Full Resume
                     </a>
                 </div>
 
                 <div class="glass-card">
                     <h3 style="font-size: 1.4rem; color: #F5F5F5; margin-bottom: 20px;">Send a Direct Message</h3>
-                    <form class="contact-form" id="contact-form" action="https://formspree.io/f/xaqrrjdb" method="POST">
+                    <form class="contact-form" id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
                         <div class="form-group">
                             <input type="text" name="name" placeholder="Your Name" required>
                         </div>
