@@ -480,27 +480,22 @@ function initPowerBiChart() {
    11. LIVELY TRACKED CODING ENGINE WITH EXACT SCREENSHOT DATA & API SYNC
    -------------------------------------------------------------------------- */
 async function fetchLiveLeetCodeData() {
-    const endpoints = [
-        'https://leetcode-stats-api.herokuapp.com/Srikar1704',
-        'https://api.allorigins.win/raw?url=https://leetcode-stats-api.herokuapp.com/Srikar1704',
-        'https://corsproxy.io/?https://leetcode-stats-api.herokuapp.com/Srikar1704'
-    ];
-
-    for (let ep of endpoints) {
-        try {
-            const res = await fetch(ep);
-            if (res.ok) {
-                const data = await res.json();
-                if (data && (data.status === 'success' || data.totalSolved)) {
-                    return {
-                        totalSolved: data.totalSolved || 304,
-                        easySolved: data.easySolved || 189,
-                        mediumSolved: data.mediumSolved || 107,
-                        hardSolved: data.hardSolved || 8
-                    };
-                }
+    try {
+        const res = await fetch('https://leetcode-stats.tashif.codes/Srikar1704/stats');
+        if (res.ok) {
+            const json = await res.json();
+            const data = json && json.data;
+            if (data && typeof data.totalSolved === 'number') {
+                return {
+                    totalSolved: data.totalSolved,
+                    easySolved: (data.byDifficulty && data.byDifficulty.easy) || 0,
+                    mediumSolved: (data.byDifficulty && data.byDifficulty.medium) || 0,
+                    hardSolved: (data.byDifficulty && data.byDifficulty.hard) || 0
+                };
             }
-        } catch (err) {}
+        }
+    } catch (err) {
+        console.warn('[Portfolio] Live LeetCode fetch failed, using last-known values:', err);
     }
     return null;
 }
@@ -605,9 +600,9 @@ async function initLiveCodingEngine(config) {
             diffChart.update();
         }
 
-        if (lcStatusPill) lcStatusPill.textContent = "LIVE TRACKED • Rating 1,411";
+        if (lcStatusPill) lcStatusPill.textContent = `LIVE SYNCED • ${lcData.totalSolved} Solved`;
     } else {
-        if (lcStatusPill) lcStatusPill.textContent = "LIVE SYNCED • 304 Solved";
+        if (lcStatusPill) lcStatusPill.textContent = "LAST KNOWN • 304 Solved";
     }
 
     // Live API Fetching for GitHub (@Srikar-sri1722)
