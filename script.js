@@ -500,6 +500,22 @@ async function fetchLiveLeetCodeData() {
     return null;
 }
 
+async function fetchLiveGfgData() {
+    try {
+        const res = await fetch('https://gfg-stats.tashif.codes/kandulasrm8r3/stats');
+        if (res.ok) {
+            const json = await res.json();
+            const data = json && json.data;
+            if (data && typeof data.totalSolved === 'number') {
+                return { totalSolved: data.totalSolved };
+            }
+        }
+    } catch (err) {
+        console.warn('[Portfolio] Live GFG fetch failed, using last-known values:', err);
+    }
+    return null;
+}
+
 async function initLiveCodingEngine(config) {
     let diffChart, langChart;
 
@@ -596,13 +612,41 @@ async function initLiveCodingEngine(config) {
         animateCounter(document.getElementById('lc-hard-val'), lcData.hardSolved);
 
         if (diffChart) {
+            diffChart.data.labels = [
+                `Easy (${lcData.easySolved})`,
+                `Medium (${lcData.mediumSolved})`,
+                `Hard (${lcData.hardSolved})`
+            ];
             diffChart.data.datasets[0].data = [lcData.easySolved, lcData.mediumSolved, lcData.hardSolved];
             diffChart.update();
         }
 
+        const lcHeadingCount = document.getElementById('lc-heading-count');
+        if (lcHeadingCount) lcHeadingCount.textContent = lcData.totalSolved;
+
+        const lcBannerCount = document.getElementById('lc-banner-count');
+        if (lcBannerCount) lcBannerCount.textContent = lcData.totalSolved;
+
+        const lcCardSub = document.getElementById('lc-card-sub');
+        if (lcCardSub) lcCardSub.textContent = `Live: ${lcData.totalSolved} Solved`;
+
         if (lcStatusPill) lcStatusPill.textContent = `LIVE SYNCED • ${lcData.totalSolved} Solved`;
     } else {
         if (lcStatusPill) lcStatusPill.textContent = "LAST KNOWN • 304 Solved";
+    }
+
+    // Live API Fetching for GeeksForGeeks (@kandulasrm8r3)
+    const fetchedGfgData = await fetchLiveGfgData();
+    if (fetchedGfgData) {
+        gfgData.totalSolved = fetchedGfgData.totalSolved;
+        animateCounter(document.getElementById('hero-gfg-solved'), gfgData.totalSolved);
+        animateCounter(document.getElementById('gfg-total-val'), gfgData.totalSolved);
+
+        const gfgBannerCount = document.getElementById('gfg-banner-count');
+        if (gfgBannerCount) gfgBannerCount.textContent = gfgData.totalSolved;
+
+        const gfgCardSub = document.getElementById('gfg-card-sub');
+        if (gfgCardSub) gfgCardSub.textContent = `Live: ${gfgData.totalSolved} Solved | Score ${gfgData.score} | Rank 648`;
     }
 
     // Live API Fetching for GitHub (@Srikar-sri1722)
