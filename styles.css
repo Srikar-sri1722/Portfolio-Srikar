@@ -294,12 +294,11 @@ h1, h2, h3, h4, h5 {
 }
 
 .hero-flex-wrap {
-    max-width: 1240px;
-    width: 100%;
+    max-width: 1200px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 45px;
+    gap: 56px;
 }
 
 .hero-text-col {
@@ -327,41 +326,41 @@ h1, h2, h3, h4, h5 {
 }
 
 .hero-photo-col {
-    flex: 0 0 500px;
+    flex: 0 0 300px;
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    transform: translate(25px, -35px);
+    justify-content: center;
 }
 
 .hero-photo-frame {
     position: relative;
-    width: 500px;
-    height: 500px;
-    border-radius: 34px;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    animation: heroPhotoFloat 4.5s ease-in-out infinite;
 }
 
 .hero-photo-frame::before {
     content: '';
     position: absolute;
-    inset: -12px;
-    border-radius: 42px;
+    inset: -10px;
+    border-radius: 50%;
     background: var(--gradient-hero);
-    filter: blur(8px);
-    opacity: 0.38;
+    filter: blur(6px);
+    opacity: 0.75;
     z-index: -1;
+    animation: heroPhotoGlow 3s ease-in-out infinite;
 }
 
 .hero-photo-img {
     width: 100%;
     height: 100%;
-    border-radius: 34px;
+    border-radius: 50%;
     object-fit: cover;
-    object-position: center;
     display: block;
-    border: none;
-    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.65);
+    border: 4px solid var(--bg-dark);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
+
 @keyframes heroPhotoFloat {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-18px); }
@@ -391,9 +390,8 @@ h1, h2, h3, h4, h5 {
     }
 
     .hero-photo-frame {
-        width: 320px;
-        height: 320px;
-        border-radius: 28px;
+        width: 220px;
+        height: 220px;
     }
 }
 
