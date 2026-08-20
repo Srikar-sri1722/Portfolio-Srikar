@@ -326,17 +326,16 @@ h1, h2, h3, h4, h5 {
 }
 
 .hero-photo-col {
-    flex: 0 0 380px;
+    flex: 0 0 440px;
     display: flex;
     justify-content: center;
 }
 
 .hero-photo-frame {
     position: relative;
-    width: 360px;
-    height: 360px;
+    width: 420px;
+    height: 420px;
     border-radius: 32px;
-    animation: heroPhotoFloat 4.5s ease-in-out infinite;
 }
 
 .hero-photo-frame::before {
@@ -346,9 +345,8 @@ h1, h2, h3, h4, h5 {
     border-radius: 40px;
     background: var(--gradient-hero);
     filter: blur(6px);
-    opacity: 0.75;
+    opacity: 0.35;
     z-index: -1;
-    animation: heroPhotoGlow 3s ease-in-out infinite;
 }
 
 .hero-photo-img {
@@ -390,8 +388,8 @@ h1, h2, h3, h4, h5 {
     }
 
     .hero-photo-frame {
-        width: 280px;
-        height: 280px;
+        width: 320px;
+        height: 320px;
         border-radius: 28px;
     }
 }
